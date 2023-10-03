@@ -30,13 +30,13 @@ jobs:
           java ProjectTest
           cd ..
 
-      # Check with Checkstyle
-
-
       # Linting with Google's Error Prone
+      - name: Setup Error Prone
+        run: wget -O error_prone.jar "https://repo1.maven.org/maven2/com/google/errorprone/error_prone_core/2.10.0/error_prone_core-2.10.0.jar"
+
       - name: Lint with Error Prone
         run: |
-          javac -cp $(find . -name "*.java") -Xplugin:ErrorProne
+          javac -cp error_prone.jar:$(find . -name "*.java") -Xplugin:ErrorProne $(find . -name "*.java")
 
       # Generating JavaDocs
       - name: Generate JavaDocs
