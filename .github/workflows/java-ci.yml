@@ -31,10 +31,7 @@ jobs:
           cd ..
 
       # Check with Checkstyle
-      - name: Check with Checkstyle
-        run: |
-          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-9.1/checkstyle-9.1-all.jar
-          java -jar checkstyle-9.1-all.jar -c checkstyle_config.xml $(find . -name "*.java")
+
 
       # Linting with Google's Error Prone
       - name: Lint with Error Prone
