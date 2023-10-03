@@ -33,6 +33,7 @@ jobs:
       # Linting with Google's Error Prone
       # (You've left this blank in the provided configuration.)
 
+
       # Generating JavaDocs
       - name: Generate JavaDocs
         run: javadoc -d JavaDocs $(find src -name "*.java")
