@@ -7,14 +7,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
 
       # Set up JDK
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v2
         with:
-          java-version: '20'
           distribution: 'adopt'
+          java-version: '20'
 
       # Compiling Java files
       - name: Compile Java files
@@ -30,22 +30,20 @@ jobs:
           java ProjectTest
           cd ..
 
-      # Linting with Google's Error Prone
-      # (You've left this blank in the provided configuration.)
-
+      # Linting with Google's Error Prone can be added here when you have it set up.
 
       # Generating JavaDocs
       - name: Generate JavaDocs
-        run: javadoc -d JavaDocs $(find src -name "*.java")
+        run: |
+          javadoc -d JavaDocs $(find src -name "*.java")
 
       # Commit and push the generated JavaDocs back to the repository
       - name: Commit and Push JavaDocs
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "arkady232@gmail.com"
+          git config user.name "GitHub Actions Bot"
+          git config user.email "arkady232@gmail.com"
           git add ./JavaDocs
-          git commit -m "Update JavaDocs [skip ci]"
-          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/ark-232/CS330-Pex2.git
-          git push
+          git commit -m "Update JavaDocs [skip ci]" || echo "No changes to commit"
+          git push origin HEAD:master
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
