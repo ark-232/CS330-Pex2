@@ -45,7 +45,7 @@ jobs:
           git config --global user.email "arkady232@gmail.com"
           git add ./JavaDocs
           git commit -m "Update JavaDocs [skip ci]"
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/ark-232/CS330-Pex2.git
+          git remote set-url origin https://x-access-token:${GH_PAT}@github.com/ark-232/CS330-Pex2.git
           git push
         env:
           GH_TOKEN: ${{ secrets.GH_PAT }}
