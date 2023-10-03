@@ -18,11 +18,17 @@ jobs:
 
       # Compiling Java files
       - name: Compile Java files
-        run: javac $(find . -name "*.java")
+        run: |
+          cd src
+          javac $(find . -name "*.java")
+          cd ..
 
       # Running tests
       - name: Run Tests
-        run: java ProjectTest
+        run: |
+          cd src
+          java ProjectTest
+          cd ..
 
       # Check with Checkstyle
       - name: Check with Checkstyle
@@ -37,7 +43,7 @@ jobs:
 
       # Generating JavaDocs
       - name: Generate JavaDocs
-        run: javadoc -d JavaDocs $(find . -name "*.java")
+        run: javadoc -d JavaDocs $(find src -name "*.java")
 
       # Commit and push the generated JavaDocs back to the repository
       - name: Commit and Push JavaDocs
