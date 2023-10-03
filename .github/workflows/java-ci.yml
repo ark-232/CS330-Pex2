@@ -7,26 +7,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
+      # Set up JDK
       - name: Set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: '20'
           distribution: 'adopt'
 
+      # Compiling Java files
       - name: Compile Java files
         run: javac $(find . -name "*.java")
 
-      # Assuming you'll name your test class "ProjectTest.java"
+      # Running tests
       - name: Run Tests
         run: java ProjectTest
 
-      # Assuming you'll have a Checkstyle configuration file in the root directory named "checkstyle_config.xml"
+      # Check with Checkstyle
       - name: Check with Checkstyle
         run: |
-          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-9.0.1/checkstyle-9.0.1-all.jar
-          java -jar checkstyle-9.0.1-all.jar -c checkstyle_config.xml $(find . -name "*.java")
+          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-9.1/checkstyle-9.1-all.jar
+          java -jar checkstyle-9.1-all.jar -c checkstyle_config.xml $(find . -name "*.java")
 
+      # Linting with Google's Error Prone
+      - name: Lint with Error Prone
+        run: |
+          javac -cp $(find . -name "*.java") -Xplugin:ErrorProne
+
+      # Generating JavaDocs
       - name: Generate JavaDocs
-        run: javadoc $(find . -name "*.java")
+        run: javadoc -d JavaDocs $(find . -name "*.java")
+
+      # Commit and push the generated JavaDocs back to the repository
+      - name: Commit and Push JavaDocs
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "<arkady232@gmail.com>"
+          git add ./JavaDocs
+          git commit -m "Update JavaDocs [skip ci]"
+          git push
