@@ -1,0 +1,32 @@
+name: Java CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '20'
+          distribution: 'adopt'
+
+      - name: Compile Java files
+        run: javac $(find . -name "*.java")
+
+      # Assuming you'll name your test class "ProjectTest.java"
+      - name: Run Tests
+        run: java ProjectTest
+
+      # Assuming you'll have a Checkstyle configuration file in the root directory named "checkstyle_config.xml"
+      - name: Check with Checkstyle
+        run: |
+          wget https://github.com/checkstyle/checkstyle/releases/download/checkstyle-9.0.1/checkstyle-9.0.1-all.jar
+          java -jar checkstyle-9.0.1-all.jar -c checkstyle_config.xml $(find . -name "*.java")
+
+      - name: Generate JavaDocs
+        run: javadoc $(find . -name "*.java")
