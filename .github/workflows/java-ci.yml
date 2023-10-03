@@ -31,7 +31,7 @@ jobs:
           cd ..
 
       # Linting with Google's Error Prone
-
+      # (You've left this blank in the provided configuration.)
 
       # Generating JavaDocs
       - name: Generate JavaDocs
@@ -41,7 +41,10 @@ jobs:
       - name: Commit and Push JavaDocs
         run: |
           git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "<arkady232@gmail.com>"
+          git config --global user.email "arkady232@gmail.com"
           git add ./JavaDocs
           git commit -m "Update JavaDocs [skip ci]"
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/ark-232/CS330-Pex2.git
           git push
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
