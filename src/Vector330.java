@@ -1,205 +1,316 @@
-import java.util.Objects;
-import java.util.regex.Matcher;
+import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
- * Represents a 2D vector with components x and y.
+ * Vector330Class - provides a 2D vector with associated operations and support
  *
- * @author Enrique Oti
- * @version 1.0
- * DOCUMENTATION: Used ChatGPT to help with the regex expressions, some parsing info, and JavaDoc comments
+ * @author Steven.Hadfield
+ * @version 1.1
+ *
  */
 public class Vector330 {
 
-    /** Small constant for floating-point comparisons. */
-    private static final double EPS = 1.0e-9;
-    private double x;
-    private double y;
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Attributes
+
+    private double x;   // x component of vector
+    private double y;   // y component of vector
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Constants
+
+    private static final double EPS = 1.0E-09;  // tolerance for floating point equality checking
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Constructors
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Default constructor, initializes the vector to (0,0).
+     * zero argument constructor
      */
     public Vector330() {
-        this.x = 0.0;
-        this.y = 0.0;
+        x = 0.0;
+        y = 0.0;
     }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * Constructs a vector with specified x and y values.
+     * Vector330Class - constructor initializing both x and y components with doubles
      *
-     * @param x The x component.
-     * @param y The y component.
+     * @param x new value for x component of the vector
+     * @param y new value for y component of the vector
      */
     public Vector330(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    /**
-     * Returns the x component.
-     *
-     * @return x component.
-     */
-    public double getX() {
-        return x;
-    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Sets the x component.
+     * Vector330Class - constructor initializing both x and y components with ints
      *
-     * @param x The x value to set.
+     * @param x new value for x component of the vector to be typecast to double
+     * @param y new value for y component of the vector to be typecast to double
+     */
+    public Vector330(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Vector330Class - constructor initializing both x and y components with longs
+     *
+     * @param x new long value for x component of the vector to be typecast to double
+     * @param y new long value for y component of the vector to be typecast to double
+     */
+    public Vector330(long x, long y) {
+        this.x = (double) x;
+        this.y = (double) y;
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Getter (Accessor) methods
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * getX() - returns x component of vector as a double
+     *
+     * @return value of x component as a double
+     */
+    public double getX() {
+        return this.x;
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * getY() - return the y component of vector as a double
+     *
+     * @return value of y component as a double
+     */
+    public double getY() {
+        return this.y;
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Setter (Mutator) methods
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * setX( double ) - sets the x component of vector using an input of type double
+     *
+     * @param x new value for x component as a double
      */
     public void setX(double x) {
         this.x = x;
     }
 
-    /**
-     * Returns the y component.
-     *
-     * @return y component.
-     */
-    public double getY() {
-        return y;
-    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Sets the y component.
+     * setY( double ) - sets the y component of vector using an input of type double
      *
-     * @param y The y value to set.
+     * @param y new value of y component as a double
      */
     public void setY(double y) {
         this.y = y;
     }
 
-    /**
-     * Checks for equality between this vector and another object.
-     * Two vectors are considered equal if their x and y components are close enough (based on EPS).
-     *
-     * @param obj The object to compare with.
-     * @return true if the objects are the same or have nearly identical x and y values, false otherwise.
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        Vector330 vector330 = (Vector330) obj;
-        return Math.abs(x - vector330.x) < EPS && Math.abs(y - vector330.y) < EPS;
-    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Vector Arithematic Methods
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Generates a hash code for this vector.
+     * equals() - checks for vector equality if this and the other (v) vector have components within epsilon of each other
      *
-     * @return hash code.
+     * @param v other vector passed in
+     * @return boolean true if this and other vectors are close enough, else false
      */
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
+    public boolean equals(Vector330 v) {
+        return (Math.abs(this.x - v.x) < EPS) && (Math.abs(this.y - v.y) < EPS);
     }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * Adds this vector with another vector.
-     *
-     * @param v The vector to add with.
-     * @return A new vector resulting from the addition.
+     * add() - does vector addition of this vector with the one passed in
+     * Vector330Class b = a.add(c);
+     * @param v other vector passed in
+     * @return  vector sum of this and the other vector
      */
     public Vector330 add(Vector330 v) {
         return new Vector330(this.x + v.x, this.y + v.y);
     }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * Subtracts another vector from this vector.
+     * subtract() - subtracts passed in vector from this vector
      *
-     * @param v The vector to subtract.
-     * @return A new vector resulting from the subtraction.
+     * @param v other vector passed in
+     * @return vector difference of this vector minus the other vector passed in
      */
     public Vector330 subtract(Vector330 v) {
         return new Vector330(this.x - v.x, this.y - v.y);
     }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * Computes the dot product of this vector with another vector.
+     * dotProduct() - computes the dot product of this vector and the other vector
      *
-     * @param v The other vector.
-     * @return The dot product value.
+     * @param v other vector to compute the dot product with
+     * @return the scalar (double) dot product of this vector and the other vector
      */
     public double dotProduct(Vector330 v) {
-        return this.x * v.x + this.y * v.y;
+        return ((this.x * v.x) + (this.y * v.y));
     }
 
-    /**
-     * Computes the magnitude of this vector.
-     *
-     * @return The magnitude.
-     */
-    public double magnitude() {
-        return Math.sqrt(x * x + y * y);
-    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
-     * Computes the direction (angle) of this vector.
+     * scale() - does a scalar-vector multiplication of this vector with double value passed in
      *
-     * @return The direction in radians.
-     */
-    public double direction() {
-        return Math.atan2(y, x);
-    }
-
-    /**
-     * Normalizes this vector.
-     *
-     * @return A new vector with magnitude of 1 in the direction of this vector.
-     */
-    public Vector330 normalize() {
-        double mag = magnitude();
-        if (mag < EPS) return new Vector330(0, 0);
-        return new Vector330(x / mag, y / mag);
-    }
-
-    /**
-     * Scales this vector by a scalar value.
-     *
-     * @param s The scalar value.
-     * @return A new scaled vector.
+     * @param s value to scale the vector by
+     * @return the scaled vector
      */
     public Vector330 scale(double s) {
-        return new Vector330(this.x * s, this.y * s);
+        return new Vector330((s * this.x), (s * this.y));
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * magnitude() - computes the magnitude (2-norm or length) of this vector
+     *
+     * @return magnitude of the vector
+     */
+    public double magnitude() {
+        return Math.sqrt(Math.pow(this.x, 2.0) + Math.pow(this.y, 2.0));
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * direction() - computes and returns the direction (orientation) of the vector in radians
+     *
+     * @return angle of the vector in radians
+     */
+    public double direction() {
+        return Math.atan2(this.y, this.x);
     }
 
     /**
-     * Parses a vector from the given input scanner.
-     * The vector is expected to be in the format: &lt; x, y &gt;.
+     * distanceTo() - computes the distance between this vector and another vector
      *
-     * @param s The scanner from which the vector string is read.
-     * @return The parsed vector.
-     * @throws Exception If there is a parsing error.
-     *
-     * <p>Regex Explanation:</p>
-     * <pre>
-     * &lt;\\s*             : Matches a '&lt;' followed by zero or more spaces.
-     * -?\\d+(\\.\\d+)?    : Matches an optional '-' for negative numbers, followed by one or more digits, and an optional fraction.
-     * ,\\s*               : Matches a ',' followed by zero or more spaces.
-     * &gt;                : Matches the closing '&gt;'.
-     * </pre>
+     * @param other The other vector
+     * @return The distance between this vector and the other vector
      */
-    public static Vector330 parseVector(java.util.Scanner s) throws Exception {
-        String str = s.findInLine("<\\s*(-?\\d+(\\.\\d+)?)\\s*,\\s*(-?\\d+(\\.\\d+)?)\\s*>");
-        if (str == null || str.isEmpty()) throw new Exception("Parsing error: Invalid vector format");
-
-        Pattern p = Pattern.compile("-?\\d+(\\.\\d+)?");
-        Matcher m = p.matcher(str);
-        m.find();
-        double x = Double.parseDouble(m.group());
-        m.find();
-        double y = Double.parseDouble(m.group());
-
-        return new Vector330(x, y);
+    public double distanceTo(Vector330 other) {
+        return this.subtract(other).magnitude();
     }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     /**
-     * @return A string representation of this vector in the format: &lt; x, y &gt;.
+     * normalize() - creates a normalized (of length one) vector in same direction as this vector
+     *
+     * @return the normalized vector or the zero vector is original vector is close to zero in magnitude
      */
-    @Override
+    public Vector330 normalize() {
+        double mag = this.magnitude();
+        if (mag > EPS) {            // protect against divide by zero
+            return this.scale(1.0 / this.magnitude());
+        } else {
+            return new Vector330(0.0, 0.0);
+        }
+    }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * toString() - overrides the default toString() method producing an angle-bracket version of this vector
+     *
+     * @return string representation of the vector in the form "&lt; 3.0, 4.0 &gt;"
+     */
     public String toString() {
-        return String.format("< %.1f, %.1f >", x, y);
+        return "< " + this.x + ", " + this.y + " >";
     }
-}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * parseVector() - inputs a Scanner object from which it reads and parses a string representing the vector with
+     *          and expected form of "&lt; 3.0, 4.0 &gt;" - note spaces are needed after '&lt;', after the comma,
+     *          and before the '&gt;'.
+     *
+     * @param s Scanner object from which to read the String representation of the vector
+     * @return a new Vector330Class object based upon the provided input
+     * @throws Exception object with the message set to a description of the parsing error encountered
+     */
+    public static Vector330 parseVector(Scanner s) throws Exception {
+
+        double xCoord;
+        double yCoord;
+
+        Pattern originalPattern = s.delimiter();  // retain original delimiters
+
+        s.useDelimiter("[" + originalPattern + ",]");  // add comma to delimiters
+
+        if (s.hasNext("<")) {
+
+            s.next("<");  // gobble up the '<'
+
+            if (s.hasNextDouble()) {
+
+                xCoord = s.nextDouble();  // capture the x coordinate
+
+                s.useDelimiter(originalPattern); // restore original delimiters
+
+                if (s.hasNext(",")) {
+
+                    s.next(",");  // gobble up the comma
+
+                    if (s.hasNextDouble()) {
+
+                        yCoord = s.nextDouble();  // capture the y coordinate
+
+                        if (s.hasNext(">")) {
+
+                            s.next(">"); // gobble up the '>'
+
+                            return new Vector330(xCoord, yCoord);  // Success!
+
+                        } else {
+                            throw new Exception("PARSE ERROR: Missing '>' to end vector");
+                        }
+                    } else {
+                        throw new Exception("PARSE ERROR:  Missing Y coordinate for vector");
+                    }
+                } else {
+                    throw new Exception("PARSE ERROR: Missing comma between X and Y coordinates");
+                }
+            } else {
+                throw new Exception("PARSE ERROR: Missing X coordinate for vector");
+            }
+        } else {
+            throw new Exception("PARSE ERROR: Missing '<' to start vector");
+        }
+    }
+
+}  // end Vector330Class class

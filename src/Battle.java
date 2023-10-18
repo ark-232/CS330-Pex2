@@ -1,32 +1,69 @@
-import javax.swing.*;
+import java.awt.*;
+import javax.swing.JOptionPane;
 
 public class Battle {
-    private Army army1;
-    private Army army2;
-    private DrawingPanel drawingPanel;
 
-    public Battle(int width, int height) {
-        drawingPanel = new DrawingPanel(width, height);
-        // Initialize armies.
-        army1 = new Army();
-        army2 = new Army();
+    private static final int TIME_STEP = 100;
+    private boolean pause = false;
+    private final DrawingPanel panel;
+    private final Graphics2D g;
+    private final Army blueArmy;
+    private final Army redArmy;
+
+    public Battle(DrawingPanel panel, Graphics2D g, Army blueArmy, Army redArmy) {
+        this.panel = panel;
+        this.g = g;
+        this.blueArmy = blueArmy;
+        this.redArmy = redArmy;
+
+        g.setColor(Color.LIGHT_GRAY);
+        g.fillRect(0, 0, panel.getWidth(), panel.getHeight());
+
+        blueArmy.draw();
+        redArmy.draw();
     }
 
-    public void runSimulation() {
-        // Initialize the warriors' positions, display them, and start the simulation loop.
-        // Wait for a user action to start.
-        JOptionPane.showMessageDialog(null, "Press OK to start the battle.");
+    public void doBattle() {
+        JOptionPane.showMessageDialog(null, "Click OK to start the battle!");
 
-        // Main simulation loop.
-        while (!isBattleOver()) {
-            // Move warriors, check for battles, and redraw.
+        while (true) {
+            if (panel.mouseClickHasOccurred(DrawingPanel.LEFT_BUTTON)) {
+                break;  // End the simulation on a left click
+            }
+
+            if (panel.keyHasBeenHit(' ')) {
+                pause = !pause;  // Toggle pause state on spacebar press
+            }
+
+            if (!pause) {
+                g.setColor(Color.LIGHT_GRAY);
+                g.fillRect(0, 0, panel.getWidth(), panel.getHeight());
+
+                // Display army counts
+                g.setColor(Color.BLUE);
+                g.drawString("Blue Army: " + blueArmy.count(), 10, 15);
+
+                g.setColor(Color.RED);
+                g.drawString("Red Army: " + redArmy.count(), panel.getWidth() - 100, 15);
+
+                blueArmy.determineNextPositions();
+                redArmy.determineNextPositions();
+
+                blueArmy.updateToNextPosition();
+                redArmy.updateToNextPosition();
+
+                blueArmy.fight();
+                redArmy.fight();
+
+                blueArmy.draw();
+                redArmy.draw();
+
+                panel.sleep(TIME_STEP);
+                panel.copyGraphicsToScreen();
+
+            }
         }
 
-        // Display the result.
-    }
-
-    private boolean isBattleOver() {
-        // Check if one army has been defeated or if the user clicked to end the battle.
-        return false;  // Placeholder.
+        panel.closeWindow();
     }
 }
