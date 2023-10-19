@@ -120,29 +120,53 @@ public class Warrior {
         }
     }
 
+    private Vector330 getAverageFriendliesPosition() {
+        double avgX = 0;
+        double avgY = 0;
+        int count = 0;
+        for (Warrior friendly : this.getFriendlyWarriors()) {
+            if (!friendly.isAlive() || friendly == this) {
+                continue;
+            }
+            avgX += friendly.getPosition().getX();
+            avgY += friendly.getPosition().getY();
+            count++;
+        }
+        return new Vector330(avgX / count, avgY / count);
+    }
+
+    private Vector330 getSeparationForce() {
+        Vector330 force = new Vector330(0, 0);
+        for (Warrior friendly : this.getFriendlyWarriors()) {
+            if (friendly == this || !friendly.isAlive()) continue;
+            double distance = this.pos.distanceTo(friendly.getPosition());
+            if (distance < this.size * 2) {
+                Vector330 repel = this.pos.subtract(friendly.getPosition());
+                repel = repel.normalize();
+                repel = repel.multiply(1.0 / distance);
+                force = force.add(repel);
+            }
+        }
+        return force;
+    }
+
     void determineNextPosition() {
         Warrior nearestAdversary = findNearestAdversary();
+        Vector330 separationForce = getSeparationForce();
+
         if (nearestAdversary != null) {
-            double directionX = nearestAdversary.getPosition().getX() - this.pos.getX();
-            double directionY = nearestAdversary.getPosition().getY() - this.pos.getY();
-
-            // Normalize direction vector (to get unit direction)
-            double magnitude = Math.sqrt(directionX * directionX + directionY * directionY);
-            directionX /= magnitude;
-            directionY /= magnitude;
-
-            // Move towards the enemy by a step of "speed"
-            double newX = this.pos.getX() + directionX * this.speed;
-            double newY = this.pos.getY() + directionY * this.speed;
-
-            this.nextPos = new Vector330(newX, newY);
+            Vector330 toAdversary = nearestAdversary.getPosition().subtract(this.pos).normalize();
+            if (nearestAdversary.getStrength() > 2 * this.getStrength()) {
+                toAdversary = toAdversary.multiply(-1); // Run away if adversary is too strong
+            }
+            toAdversary = toAdversary.add(separationForce).normalize();
+            this.nextPos = this.pos.add(toAdversary.multiply(this.speed));
         } else {
-            // If no adversary found, move randomly (this shouldn't really happen, but it's a fallback)
-            double newX = this.pos.getX() + (rand.nextInt(3) - 1) * this.speed;
-            double newY = this.pos.getY() + (rand.nextInt(3) - 1) * this.speed;
-            this.nextPos = new Vector330(newX, newY);
+            // If no adversary found, move based on separation force
+            this.nextPos = this.pos.add(separationForce.multiply(this.speed));
         }
     }
+
 
 
     void fight() {
@@ -163,6 +187,9 @@ public class Warrior {
         double minDistance = Double.MAX_VALUE;
         Warrior nearest = null;
         for (Warrior enemy : this.getAdversaryWarriors()) {
+            if (!enemy.isAlive()) {
+                continue; // Skip dead warriors
+            }
             double distance = this.pos.distanceTo(enemy.getPosition());
             if (distance < minDistance) {
                 minDistance = distance;
@@ -171,6 +198,7 @@ public class Warrior {
         }
         return nearest;
     }
+
 
 }
 
@@ -183,18 +211,21 @@ class EvadingWarrior extends Warrior {
 
     @Override
     void determineNextPosition() {
-        // The evading warrior tries to move away from close enemies.
         Warrior closestEnemy = findNearestAdversary();
+        int nearbyEnemies = countNeighbors(getAdversaryWarriors(), lookRange);
+        int nearbyFriendlies = countNeighbors(getFriendlyWarriors(), lookRange);
 
-        if (closestEnemy != null && this.pos.distanceTo(closestEnemy.getPosition()) < lookRange) {
-            double newX = this.pos.getX() - (closestEnemy.getPosition().getX() - this.pos.getX()) * this.speed;
-            double newY = this.pos.getY() - (closestEnemy.getPosition().getY() - this.pos.getY()) * this.speed;
-            this.nextPos = new Vector330(newX, newY);
+        // If there are more enemies than friendlies in the specified range, evade the nearest enemy
+        if (nearbyEnemies > nearbyFriendlies && closestEnemy != null) {
+            Vector330 escapeDirection = this.pos.subtract(closestEnemy.getPosition()).normalize();
+            this.nextPos = this.pos.add(escapeDirection.multiply(this.speed));
         } else {
-            // If no enemies are close, move randomly.
+            // If no overwhelming enemies are close, move as per a regular warrior
             super.determineNextPosition();
         }
     }
+
+
 
     private int countNeighbors(Warrior[] others, int distance) {
         int count = 0;
@@ -206,3 +237,4 @@ class EvadingWarrior extends Warrior {
         return count;
     }
 }
+

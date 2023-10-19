@@ -1,8 +1,9 @@
+import javax.swing.*;
 import java.awt.*;
 
 public class Main {
 
-    private static final int BLUE_ARMY_SIZE = 250;
+    private static final int BLUE_ARMY_SIZE = 500;
     private static final int RED_ARMY_SIZE = 250;
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
@@ -23,9 +24,9 @@ public class Main {
         Warrior.setScreenHeight(WINDOW_HEIGHT);
 
         // Initialize Blue Army
-        Army blueArmy = new Army(BLUE_ARMY_SIZE, Army.LEFT_SIDE, 10.0, 10, Color.BLUE, 100.0, 1.0, false);
+        Army blueArmy = new Army(BLUE_ARMY_SIZE, Army.LEFT_SIDE, 10.0, 10, Color.BLUE, 100.0, 2.0, false);
         // Initialize Red Army
-        Army redArmy = new Army(RED_ARMY_SIZE, Army.RIGHT_SIDE, 10.0, 10, Color.RED, 100.0, 1.0, false);
+        Army redArmy = new Army(RED_ARMY_SIZE, Army.RIGHT_SIDE, 10.0, 10, Color.RED, 100.0, 3.0, true);
 
 
         for (Warrior warrior : blueArmy.getWarriors()) {
@@ -40,5 +41,13 @@ public class Main {
         // Initialize Battle and start
         Battle battle = new Battle(panel, g, blueArmy, redArmy);
         battle.doBattle();
+
+        String message = "";
+        if(blueArmy.count() == 0) {
+            message = "Red Army wins!";
+        } else if(redArmy.count() == 0) {
+            message = "Blue Army wins!";
+        }
+        JOptionPane.showMessageDialog(null, message);
     }
 }

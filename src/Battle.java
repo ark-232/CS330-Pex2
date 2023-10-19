@@ -35,6 +35,10 @@ public class Battle {
                 pause = !pause;  // Toggle pause state on spacebar press
             }
 
+            if (blueArmy.count() == 0 || redArmy.count() == 0) {
+                break; // Exit the battle loop when one army is defeated
+            }
+
             if (!pause) {
                 g.setColor(Color.LIGHT_GRAY);
                 g.fillRect(0, 0, panel.getWidth(), panel.getHeight());
@@ -63,7 +67,6 @@ public class Battle {
 
             }
         }
-
-        panel.closeWindow();
     }
 }
+

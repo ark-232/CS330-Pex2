@@ -16,7 +16,6 @@ public class Army {
     private static final Random rand = new Random();
 
     private final Warrior[] warriors;
-    private Army adversary;
     private final double speed;
     private final int size;
     private final Color color;
@@ -26,9 +25,8 @@ public class Army {
     private int bottomY;
 
     // Constructor
-    public Army(int number, int placement, double speed, int size, Color color,
-                double courage, double strength, boolean evadingArmy) {
-        if(screenWidth == 0 || screenHeight == 0) {
+    public Army(int number, int placement, double speed, int size, Color color, double courage, double strength, boolean evadingArmy) {
+        if (screenWidth == 0 || screenHeight == 0) {
             throw new RuntimeException("Screen width and height not set");
         }
         this.speed = speed;
@@ -37,12 +35,24 @@ public class Army {
         warriors = new Warrior[number];
         setPlacementParameters(placement);
 
-        for (int i = 0; i < number; i++) {
-            int x = rand.nextInt(rightX - leftX) + leftX;
-            int y = rand.nextInt(bottomY - topY) + topY;
-            warriors[i] = new Warrior(x, y, speed, size, color, courage, strength, evadingArmy);
+        int battlefieldLine = screenWidth / 2;
+        int spread = 200; // Width on either side of the battlefield line where warriors can initially be placed.
 
+        for (int i = 0; i < number; i++) {
+            int x;
+            if (placement == LEFT_SIDE) {
+                x = rand.nextInt(spread) + (battlefieldLine - spread);
+            } else {
+                x = rand.nextInt(spread) + battlefieldLine;
+            }
+            int y = rand.nextInt(bottomY - topY) + topY;
+            if (evadingArmy) {
+                warriors[i] = new EvadingWarrior(x, y, speed, size, color, courage, strength);
+            } else {
+                warriors[i] = new Warrior(x, y, speed, size, color, courage, strength, false);
+            }
         }
+
     }
 
     // Methods
@@ -68,10 +78,6 @@ public class Army {
 
     static int getScreenHeight() {
         return screenHeight;
-    }
-
-    void setAdversary(Army adversary) {
-        this.adversary = adversary;
     }
 
     Warrior[] getWarriors() {
@@ -100,43 +106,48 @@ public class Army {
 
     void fight() {
         for (Warrior w : warriors) {
-            w.fight();
+            if (w.isAlive()) {
+                w.fight();
+            }
         }
     }
 
     void draw() {
         for (Warrior w : warriors) {
-            w.draw();
+            if (w.isAlive()) {
+                w.draw();
+            }
         }
     }
 
     private void setPlacementParameters(int placement) {
         switch (placement) {
             case LEFT_SIDE:
-                leftX = (int) (0.1 * screenWidth);
-                rightX = (int) (0.2 * screenWidth);
-                topY = (int) (0.3 * screenHeight);
-                bottomY = (int) (0.7 * screenHeight);
+                leftX = 0;
+                rightX = screenWidth / 4;
+                topY = 0;
+                bottomY = screenHeight;
                 break;
             case RIGHT_SIDE:
-                leftX = (int) (0.8 * screenWidth);
-                rightX = (int) (0.9 * screenWidth);
-                topY = (int) (0.3 * screenHeight);
-                bottomY = (int) (0.7 * screenHeight);
+                leftX = 3 * screenWidth / 4;
+                rightX = screenWidth;
+                topY = 0;
+                bottomY = screenHeight;
                 break;
             case TOP_SIDE:
-                leftX = (int) (0.3 * screenWidth);
-                rightX = (int) (0.7 * screenWidth);
-                topY = (int) (0.1 * screenHeight);
-                bottomY = (int) (0.2 * screenHeight);
+                leftX = 0;
+                rightX = screenWidth;
+                topY = 0;
+                bottomY = screenHeight / 4;
                 break;
             case BOTTOM_SIDE:
-                leftX = (int) (0.3 * screenWidth);
-                rightX = (int) (0.7 * screenWidth);
-                topY = (int) (0.8 * screenHeight);
-                bottomY = (int) (0.9 * screenHeight);
+                leftX = 0;
+                rightX = screenWidth;
+                topY = 3 * screenHeight / 4;
+                bottomY = screenHeight;
                 break;
-
+            default:
+                throw new IllegalArgumentException("Unknown placement");
         }
     }
 }

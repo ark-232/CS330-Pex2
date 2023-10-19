@@ -313,4 +313,13 @@ public class Vector330 {
         }
     }
 
+    /**
+     * multiply() - does a scalar-vector multiplication of this vector with double value passed in
+     *
+     * @param scalar value to multiply the vector's components by
+     * @return the multiplied vector
+     */
+    public Vector330 multiply(double scalar) {
+        return new Vector330(this.x * scalar, this.y * scalar);
+    }
 }  // end Vector330Class class
