@@ -16,7 +16,7 @@ import static java.lang.Thread.sleep;
  * <ul>
  *   <li><strong>Complex Agro System:</strong> Warriors aren't just mindless sprites; they engage the nearest foe. And if ambushed? They retaliate. Multiple assailants? They prioritize the closest.</li>
  *   <li><strong>Tactical Movement:</strong> Witness the art of war as units tactically attract and repel, ensuring coordinated maneuvers on the battlefield.</li>
- *   <li><strong>Evade & Route:</strong> It's not all about brute force. Units can evade, and groups can tactically route adversaries, driving them off the terrain.</li>
+ *   <li><strong>Evade/Route:</strong> It's not all about brute force. Units can evade, and groups can tactically route adversaries, driving them off the terrain.</li>
  *   <li><strong>Visual Delight:</strong> The battleground isn't just any drab arena. It boasts a custom background image crafted with precision. And our warriors? Custom unit images that stand out.</li>
  * </ul>
  *
