@@ -10,7 +10,18 @@ import static java.lang.Thread.sleep;
 /**
  * Main class that initializes and simulates a battle between two armies represented by logos.
  * <p>
- * The blue army is represented by the Java logo and the red army by the Python logo.
+ * The blue army is represented by the Rust logo and the red army by the Python logo.
+ *
+ <h3>Features:</h3>
+ * <ul>
+ *   <li><strong>Complex Agro System:</strong> Warriors aren't just mindless sprites; they engage the nearest foe. And if ambushed? They retaliate. Multiple assailants? They prioritize the closest.</li>
+ *   <li><strong>Tactical Movement:</strong> Witness the art of war as units tactically attract and repel, ensuring coordinated maneuvers on the battlefield.</li>
+ *   <li><strong>Evade & Route:</strong> It's not all about brute force. Units can evade, and groups can tactically route adversaries, driving them off the terrain.</li>
+ *   <li><strong>Visual Delight:</strong> The battleground isn't just any drab arena. It boasts a custom background image crafted with precision. And our warriors? Custom unit images that stand out.</li>
+ * </ul>
+ *
+ * <h3>Documentation Credits:</h3>
+ * <p>Background artistry achieved with the magic of Dalle. Coding aided by the wisdom of CoPilot. Dr. Hadfield lent his expertise on the captivating fighting logic on October 19.</p>
  *
  * @author C2C Enrique Oti
  * @version 1.0
